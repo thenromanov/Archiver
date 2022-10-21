@@ -11,8 +11,6 @@ private:
     using SizeType = size_t;
 
 public:
-    class EmptyQueueException : public std::exception {};
-
     PriorityQueue() = default;
 
     PriorityQueue(std::initializer_list<T> list) {
@@ -32,7 +30,7 @@ public:
 
     const T& Top() const {
         if (Empty()) {
-            throw EmptyQueueException();
+            throw std::out_of_range("Queue is empty");
         }
         return nodes_.front();
     }
@@ -49,7 +47,7 @@ public:
 
     void Pop() {
         if (Empty()) {
-            throw EmptyQueueException();
+            throw std::out_of_range("Queue is empty");
         }
         std::swap(nodes_.front(), nodes_.back());
         nodes_.pop_back();
