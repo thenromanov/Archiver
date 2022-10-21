@@ -2,9 +2,10 @@
 
 #include <cstddef>
 #include <exception>
+#include <functional>
 #include <vector>
 
-template <typename T>
+template <typename T, typename Container = std::vector<T>, typename Compare = std::less<typename Container::value_type>>
 class PriorityQueue {
 private:
     using SizeType = size_t;
@@ -33,7 +34,7 @@ public:
         if (Empty()) {
             throw EmptyQueueException();
         }
-        return nodes_[0];
+        return nodes_.front();
     }
 
     void Push(const T& value) {
@@ -50,7 +51,7 @@ public:
         if (Empty()) {
             throw EmptyQueueException();
         }
-        std::swap(nodes_[0], nodes_.back());
+        std::swap(nodes_.front(), nodes_.back());
         nodes_.pop_back();
         if (!Empty()) {
             SiftDown(0);
@@ -68,20 +69,20 @@ public:
 private:
     std::vector<T> nodes_;
 
-    void SiftUp(SizeType node) {
-        while (node > 0 && nodes_[(node - 1) >> 1] > nodes_[node]) {
+    void SiftUp(SizeType node, Compare compare = Compare()) {
+        while (node > 0 && compare(nodes_[node], nodes_[(node - 1) >> 1])) {
             std::swap(nodes_[(node - 1) >> 1], nodes_[node]);
             node = (node - 1) >> 1;
         }
     }
 
-    void SiftDown(SizeType node) {
+    void SiftDown(SizeType node, Compare compare = Compare()) {
         while (node * 2 + 1 < nodes_.size()) {
             const SizeType left_node = node * 2 + 1;
             const SizeType right_node = node * 2 + 2;
             const SizeType next_node =
-                (right_node < nodes_.size() && nodes_[right_node] < nodes_[left_node] ? right_node : left_node);
-            if (nodes_[node] <= nodes_[next_node]) {
+                (right_node < nodes_.size() && compare(nodes_[right_node], nodes_[left_node]) ? right_node : left_node);
+            if (compare(nodes_[node], nodes_[next_node])) {
                 break;
             }
             std::swap(nodes_[node], nodes_[next_node]);
