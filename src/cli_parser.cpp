@@ -2,20 +2,26 @@
 
 #include <exception>
 
-const CLIParser::SizeType CLIParser::AddArgument(ValueType key, ValueType description,
-                                                 SizeType min_args = std::numeric_limits<SizeType>::min(),
-                                                 SizeType max_args = std::numeric_limits<size_t>::max()) {
+CLIParser::Argument::operator bool() const {
+    return parser_->data_[id_].is_parsed;
+}
+
+CLIParser::Argument::Argument(CLIParser* parser, SizeType id) : parser_(parser), id_(id) {
+}
+
+const CLIParser::Argument CLIParser::AddArgument(ValueType key, ValueType description, SizeType min_args,
+                                                 SizeType max_args) {
     if (key_to_id_.find(key) != key_to_id_.end()) {
         throw std::invalid_argument("Some of the arguments are already provided");
     }
     SizeType id = data_.size();
     key_to_id_[key] = id;
-    data_.push_back({.key = key, .description = description, .min_args = min_args, .max_args = max_args});
-    return id;
+    data_.push_back(
+        {.key = key, .description = description, .min_args = min_args, .max_args = max_args, .is_parsed = false});
+    return Argument(this, id);
 }
 
-const std::pair<CLIParser::SizeType, std::vector<CLIParser::ValueType>> CLIParser::Parse(int& argc, char** argv) {
-    ValueType last_command;
+const std::vector<CLIParser::ValueType> CLIParser::Parse(int& argc, char** argv) {
     if (argc == 1) {
         throw std::invalid_argument("No arguments provided. Use -h to get more information");
     }
@@ -29,11 +35,12 @@ const std::pair<CLIParser::SizeType, std::vector<CLIParser::ValueType>> CLIParse
     } else if (argc - 2 > data_[id_it->second].max_args) {
         throw std::invalid_argument("Too many arguments. Use -h to get more information");
     }
+    data_[id_it->second].is_parsed = true;
     std::vector<ValueType> arguments;
     for (int i = 2; i < argc; ++i) {
         arguments.push_back(std::string_view(argv[i]));
     }
-    return {id_it->second, arguments};
+    return arguments;
 }
 
 const std::string CLIParser::GetData() const {

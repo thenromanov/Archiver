@@ -10,6 +10,7 @@
 #include "bitarray.hpp"
 #include "bitread.hpp"
 #include "bitwrite.hpp"
+#include "cli_parser.hpp"
 #include "encoder_trie.hpp"
 
 const uint16_t FILENAME_END = 256;
@@ -99,5 +100,23 @@ void Encode(std::ostream& output_stream, std::string_view file_path, uint16_t en
 }
 
 int main(int argc, char** argv) {
+    CLIParser parser;
+    auto help_command = parser.AddArgument("-h", " -- list available subcommands and some concept guides.", 0, 0);
+    auto zip_command = parser.AddArgument(
+        "-c", "<archive_name file1 [file2 ...]> -- compresses the transferred files into an archive", 1);
+    auto unzip_command = parser.AddArgument("-d", "<archive_name> -- decompresses given archive", 1, 1);
+    try {
+        auto arguments = parser.Parse(argc, argv);
+        if (help_command) {
+            std::cout << parser.GetData();
+        } else if (zip_command) {
+        } else if (unzip_command) {
+        } else {
+            return 111;
+        }
+    } catch (const std::exception& e) {      // Incorrect cli input
+        std::cerr << e.what() << std::endl;  // Print message
+        return 0;                            // Consider as correct program operation
+    }
     return 0;
 }
