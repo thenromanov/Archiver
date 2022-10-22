@@ -1,5 +1,7 @@
 #include "cli_parser.hpp"
 
+#include <exception>
+
 const CLIParser::SizeType CLIParser::AddArgument(ValueType key, ValueType description,
                                                  SizeType min_args = std::numeric_limits<SizeType>::min(),
                                                  SizeType max_args = std::numeric_limits<size_t>::max()) {
