@@ -18,6 +18,8 @@ private:
 public:
     BitRead(std::istream& stream);
 
+    void ChangeStream(std::istream& stream);
+
     bool IsFinished() const;
 
     ValueType Get(const SizeType size);

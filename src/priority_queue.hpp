@@ -35,6 +35,15 @@ public:
         return nodes_.front();
     }
 
+    T& Extract() {
+        if (Empty()) {
+            throw std::out_of_range("Queue is empty");
+        }
+        T& value = nodes_.front();
+        Pop();
+        return value;
+    }
+
     void Push(const T& value) {
         nodes_.push_back(value);
         SiftUp(nodes_.size() - 1);
@@ -62,6 +71,10 @@ public:
 
     SizeType Size() const {
         return nodes_.size();
+    }
+
+    void Reserve(const SizeType size) {
+        nodes_.reserve(size);
     }
 
 private:

@@ -3,12 +3,20 @@
 #include <exception>
 
 BitRead::BitRead(std::istream& stream) : current_symbol_(0), current_symbol_bits_(0) {
-
     if (stream.bad()) {
         throw std::invalid_argument("Given stream is bad");
     }
     stream_ = &stream;
     current_symbol_ = stream_->get();
+}
+
+void BitRead::ChangeStream(std::istream& stream) {
+    if (stream.bad()) {
+        throw std::invalid_argument("Given stream is bad");
+    }
+    stream_ = &stream;
+    current_symbol_ = 0;
+    current_symbol_bits_ = 0;
 }
 
 bool BitRead::IsFinished() const {
