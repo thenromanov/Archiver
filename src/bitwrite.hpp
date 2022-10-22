@@ -17,15 +17,14 @@ private:
     const SizeType char_type_size_ = sizeof(CharType) * 8;
 
 public:
-    BitWrite(std::ostream& stream, const SizeType size);
+    BitWrite(std::ostream& stream);
 
-    void Put(ValueType value);
+    void Put(ValueType value, const SizeType size);
 
     void Flush();
 
 private:
     std::ostream* stream_;
-    const SizeType binary_size_;
 
     UCharType current_symbol_;
     SizeType current_symbol_bits_;
