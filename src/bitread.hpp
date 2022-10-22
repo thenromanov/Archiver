@@ -16,18 +16,17 @@ private:
     const SizeType char_type_size_ = sizeof(CharType) * 8;
 
 public:
-    BitRead(std::istream& stream, const SizeType size);
+    BitRead(std::istream& stream);
 
     bool IsFinished() const;
 
-    ValueType Get();
+    ValueType Get(const SizeType size);
 
 private:
     std::istream* stream_;
-    const SizeType binary_size_;
 
     ValueType current_symbol_;
     SizeType current_symbol_bits_;
 
-    void AssignBits(ValueType& result, SizeType& result_bits);
+    void AssignBits(ValueType& result, SizeType& result_bits, const SizeType size);
 };
