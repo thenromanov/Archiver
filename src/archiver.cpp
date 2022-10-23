@@ -19,7 +19,7 @@ const uint16_t ARCHIVE_END = 258;
 const uint16_t MAX_CODE_LENGTH = 257;
 
 void Encode(std::string_view output_path, const std::vector<std::string_view>& input_paths) {
-    std::ofstream output_file_stream(output_path, std::ios_base::out | std::ios::binary);
+    std::fstream output_file_stream(output_path, std::ios_base::out | std::ios::binary);
     if (!output_file_stream.is_open()) {
         throw std::runtime_error("Can't open file");
     }
@@ -29,7 +29,7 @@ void Encode(std::string_view output_path, const std::vector<std::string_view>& i
     for (auto input_path : input_paths) {
         size_t name_start = input_path.rfind('/', input_path.back()) + 1;
         std::string_view file_name = input_path.substr(name_start, input_path.size() - name_start);
-        std::ifstream input_file_stream(input_path, std::ios_base::in | std::ios::binary);
+        std::fstream input_file_stream(input_path, std::ios_base::in | std::ios::binary);
         if (!input_file_stream.is_open()) {
             throw std::runtime_error("Can't open file");
         }
@@ -106,7 +106,7 @@ void Encode(std::string_view output_path, const std::vector<std::string_view>& i
 }
 
 void Decode(std::string_view input_path) {
-    std::ifstream input_file_stream(input_path, std::ios_base::in | std::ios::binary);
+    std::fstream input_file_stream(input_path, std::ios_base::in | std::ios::binary);
     if (!input_file_stream.is_open()) {
         throw std::runtime_error("Can't open file");
     }
@@ -147,7 +147,7 @@ void Decode(std::string_view input_path) {
             }
         }
 
-        std::ofstream output_file_stream(output_path, std::ios_base::out | std::ios::binary);
+        std::fstream output_file_stream(output_path, std::ios_base::out | std::ios::binary);
         if (!output_file_stream.is_open()) {
             throw std::runtime_error("Can't open file");
         }
