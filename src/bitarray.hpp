@@ -12,18 +12,10 @@ public:
     Bitarray() : storage_(0), bits_count_(1) {
     }
 
-    Bitarray(SizeType value, SizeType bits_count) : storage_(value), bits_count_(bits_count) {
+    Bitarray(SizeType bits_count) : storage_(0), bits_count_(bits_count) {
     }
 
-    explicit Bitarray(SizeType value) : Bitarray(value, 1) {
-        if (value == 0) {
-            return;
-        }
-        bits_count_ = 0;
-        while (value > 0) {
-            value <<= 1;
-            ++bits_count_;
-        }
+    Bitarray(SizeType bits_count, SizeType value) : storage_(value), bits_count_(bits_count) {
     }
 
     Bitarray(const Bitarray& other) {
@@ -43,6 +35,7 @@ public:
 
     Bitarray& operator=(Bitarray&& other) & {
         Swap(other);
+        return *this;
     }
 
     Bitarray& operator++() {
@@ -68,7 +61,11 @@ public:
         return bits_count_;
     }
 
-    bool operator[](SizeType index) {
+    bool operator[](SizeType index) const {
+        return storage_[index];
+    }
+
+    typename std::bitset<N>::reference operator[](SizeType index) {
         return storage_[index];
     }
 

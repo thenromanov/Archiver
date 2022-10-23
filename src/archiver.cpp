@@ -9,6 +9,7 @@
 #include "bitread.hpp"
 #include "bitwrite.hpp"
 #include "cli_parser.hpp"
+#include "decoder.hpp"
 #include "encoder.hpp"
 
 const uint16_t FILENAME_END = 256;
@@ -104,6 +105,69 @@ void Encode(std::string_view output_path, const std::vector<std::string_view>& i
     output_file_stream.close();
 }
 
+void Decode(std::string_view input_path) {
+    std::ifstream input_file_stream(input_path, std::ios_base::in | std::ios::binary);
+    if (!input_file_stream.is_open()) {
+        throw std::runtime_error("Can't open file");
+    }
+
+    BitRead reader(input_file_stream);
+    uint16_t current_symbol = Decoder::EMPTY_SYMBOL;
+    while (current_symbol != ARCHIVE_END) {
+        const size_t alphabet_size = reader.Get(9);
+        std::vector<std::pair<uint16_t, size_t>> binary_lenghts(alphabet_size);
+        for (auto& [symbol, lenght] : binary_lenghts) {
+            symbol = reader.Get(9);
+        }
+
+        auto it = binary_lenghts.begin();
+        size_t current_length = 1;
+        while (it != binary_lenghts.end()) {
+            size_t given_length = reader.Get(9);
+            for (; given_length > 0; --given_length, ++it) {
+                it->second = current_length;
+            }
+            ++current_length;
+        }
+        Decoder decoder;
+
+        std::unordered_map<uint16_t, Bitarray<MAX_CODE_LENGTH>> symbols_codes =
+            decoder.GetCanonicalCodes<MAX_CODE_LENGTH>(binary_lenghts);
+
+        for (const auto& [symbol, code] : symbols_codes) {
+            decoder.InsertBitarry(symbol, code);
+        }
+
+        std::string output_path;
+        while (current_symbol != FILENAME_END) {
+            auto res = reader.Get(1);
+            current_symbol = decoder.AutomatonStep(res);
+            if (current_symbol != Decoder::EMPTY_SYMBOL && current_symbol != FILENAME_END) {
+                output_path.push_back(static_cast<char>(current_symbol));
+            }
+        }
+
+        std::ofstream output_file_stream(output_path, std::ios_base::out | std::ios::binary);
+        if (!output_file_stream.is_open()) {
+            throw std::runtime_error("Can't open file");
+        }
+        BitWrite writer(output_file_stream);
+
+        while (current_symbol != ONE_MORE_FILE && current_symbol != ARCHIVE_END) {
+            current_symbol = decoder.AutomatonStep(reader.Get(1));
+            if (current_symbol != Decoder::EMPTY_SYMBOL && current_symbol != ONE_MORE_FILE &&
+                current_symbol != ARCHIVE_END) {
+                writer.Put(current_symbol, 8);
+            }
+        }
+
+        writer.Flush();
+        output_file_stream.close();
+    }
+
+    input_file_stream.close();
+}
+
 int main(int argc, char** argv) {
     CLIParser parser;
     auto help_command = parser.AddArgument("-h", " -- list available subcommands and some concept guides.", 0, 0);
@@ -119,6 +183,8 @@ int main(int argc, char** argv) {
             std::vector<std::string_view> input_paths(arguments.begin() + 1, arguments.end());
             Encode(output_path, input_paths);
         } else if (unzip_command) {
+            std::string_view input_path = arguments[0];
+            Decode(input_path);
         }
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

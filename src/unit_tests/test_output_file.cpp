@@ -4,7 +4,7 @@
 
 TEST_CASE("FileEqual") {
     {
-        std::ifstream input_file_stream("/Users/thenromanov/Projects/Archiver/tests/data/empty.arc",
+        std::ifstream input_file_stream("/Users/thenromanov/Projects/Archiver/tests/data/a.arc",
                                         std::ios_base::in | std::ios::binary);
         int j = 0;
         while (!input_file_stream.eof()) {
@@ -22,7 +22,7 @@ TEST_CASE("FileEqual") {
         input_file_stream.close();
     }
     {
-        std::ifstream input_file_stream("/Users/thenromanov/Projects/Archiver/src/unit_tests/empty.arc",
+        std::ifstream input_file_stream("/Users/thenromanov/Projects/Archiver/src/unit_tests/a.arc",
                                         std::ios_base::in | std::ios::binary);
         int j = 0;
         while (!input_file_stream.eof()) {

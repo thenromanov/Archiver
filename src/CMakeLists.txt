@@ -16,5 +16,5 @@ add_unit_test(test_output_file unit_tests/test_output_file.cpp)
 
 add_executable(
         archiver
-        archiver.cpp bitread.cpp bitwrite.cpp cli_parser.cpp encoder.cpp
+        archiver.cpp bitread.cpp bitwrite.cpp cli_parser.cpp encoder.cpp decoder.cpp
 )

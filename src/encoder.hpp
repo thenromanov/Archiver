@@ -6,9 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "bitarray.hpp"
+#include "huffman.hpp"
 
-class Encoder {
+class Encoder : public Huffman {
 private:
     struct TrieNode {
         TrieNode();
@@ -34,28 +34,6 @@ private:
 
 public:
     std::vector<std::pair<uint16_t, size_t>> GetCodesLengths(const std::unordered_map<uint16_t, size_t>& data);
-
-    template <size_t N>
-    std::unordered_map<u_int16_t, Bitarray<N>> GetCanonicalCodes(const std::vector<std::pair<uint16_t, size_t>>& data) {
-        if (!std::is_sorted(data.begin(), data.end(), [](auto first, auto second) {
-                if (first.second != second.second) {
-                    return first.second < second.second;
-                }
-                return first.first < second.first;
-            })) {
-            throw std::invalid_argument("Data must be sorted");
-        }
-        std::unordered_map<uint16_t, Bitarray<N>> symbol_code;
-        Bitarray<N> current_code(0, data.front().second);
-        symbol_code[data.front().first] = current_code;
-        for (size_t i = 1; i < data.size(); ++i) {
-            ++current_code;
-            current_code <<= (data[i].second - data[i - 1].second);
-            symbol_code[data[i].first] = current_code;
-        }
-
-        return symbol_code;
-    }
 
 private:
     std::unique_ptr<TrieNode> trie_head_;
