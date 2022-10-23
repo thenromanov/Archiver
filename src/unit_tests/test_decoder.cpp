@@ -30,9 +30,9 @@ TEST_CASE("Decoding") {
             decoder.InsertBitarry(symbol, code);
         }
 
-        REQUIRE(decoder.AutomatonStep(0) == static_cast<uint16_t>('b'));
-        REQUIRE(decoder.AutomatonStep(1) == Decoder::EMPTY_SYMBOL);
-        REQUIRE(decoder.AutomatonStep(1) == static_cast<uint16_t>('c'));
+        REQUIRE(decoder.AutomatonStep(false) == static_cast<uint16_t>('b'));
+        REQUIRE(decoder.AutomatonStep(true) == Decoder::EMPTY_SYMBOL);
+        REQUIRE(decoder.AutomatonStep(true) == static_cast<uint16_t>('c'));
     }
 }
 
@@ -40,7 +40,7 @@ TEST_CASE("Undefined behaviour") {
     {
         Decoder decoder;
         try {
-            decoder.AutomatonStep(0);
+            decoder.AutomatonStep(false);
         } catch (const std::exception& e) {
             return;
         }
