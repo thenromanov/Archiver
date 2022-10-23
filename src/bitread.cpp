@@ -2,7 +2,7 @@
 
 #include <exception>
 
-BitRead::BitRead(std::istream& stream) : current_symbol_(0), current_symbol_bits_(0) {
+BitRead::BitRead(std::istream& stream) : current_symbol_(0), current_symbol_bits_(char_type_size_) {
     if (stream.bad()) {
         throw std::invalid_argument("Given stream is bad");
     }
@@ -15,15 +15,15 @@ void BitRead::ChangeStream(std::istream& stream) {
         throw std::invalid_argument("Given stream is bad");
     }
     stream_ = &stream;
-    current_symbol_ = 0;
-    current_symbol_bits_ = 0;
+    current_symbol_ = stream_->get();
+    current_symbol_bits_ = char_type_size_;
 }
 
 bool BitRead::IsFinished() const {
     return stream_->eof();
 }
 
-BitRead::ValueType BitRead::Get(const SizeType size) {
+BitRead::ValueType BitRead::Get(SizeType size) {
     if (IsFinished()) {
         throw std::out_of_range("All values from the stream are already read");
     }
@@ -34,29 +34,28 @@ BitRead::ValueType BitRead::Get(const SizeType size) {
         throw std::invalid_argument("Given size is greater than available bits amount");
     }
     ValueType result = 0;
-    SizeType result_bits = 0;
-    AssignBits(result, result_bits, size);
+    AssignBits(result, size);
 
-    while (!IsFinished() && result_bits < size) {
+    while (!IsFinished() && 0 < size) {
         current_symbol_ = stream_->get();
-        current_symbol_bits_ = 0;
+        current_symbol_bits_ = char_type_size_;
         if (IsFinished()) {
             break;
         }
-        AssignBits(result, result_bits, size);
+        AssignBits(result, size);
     }
 
-    if (current_symbol_bits_ == char_type_size_) {
+    if (current_symbol_bits_ == 0) {
         current_symbol_ = stream_->get();
-        current_symbol_bits_ = 0;
+        current_symbol_bits_ = char_type_size_;
     }
     return result;
 }
 
-void BitRead::AssignBits(ValueType& result, SizeType& result_bits, const SizeType size) {
-    while (result_bits < size && current_symbol_bits_ < char_type_size_) {
-        result |= (((current_symbol_ >> current_symbol_bits_) & 1) << result_bits);
-        ++result_bits;
-        ++current_symbol_bits_;
+void BitRead::AssignBits(ValueType& result, SizeType& result_bits) {
+    while (0 < result_bits && 0 < current_symbol_bits_) {
+        result |= (((current_symbol_ >> (current_symbol_bits_ - 1)) & 1) << (result_bits - 1));
+        --result_bits;
+        --current_symbol_bits_;
     }
 }

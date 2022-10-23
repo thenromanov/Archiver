@@ -35,11 +35,11 @@ public:
         return nodes_.front();
     }
 
-    T& Extract() {
+    T Extract() {
         if (Empty()) {
             throw std::out_of_range("Queue is empty");
         }
-        T& value = nodes_.front();
+        T value = std::move(nodes_.front());
         Pop();
         return value;
     }

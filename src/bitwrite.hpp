@@ -19,7 +19,9 @@ private:
 public:
     BitWrite(std::ostream& stream);
 
-    void Put(ValueType value, const SizeType size);
+    void ChangeStream(std::ostream& stream);
+
+    void Put(ValueType value, SizeType size);
 
     void Flush();
 

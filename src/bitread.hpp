@@ -22,7 +22,7 @@ public:
 
     bool IsFinished() const;
 
-    ValueType Get(const SizeType size);
+    ValueType Get(SizeType size);
 
 private:
     std::istream* stream_;
@@ -30,5 +30,5 @@ private:
     ValueType current_symbol_;
     SizeType current_symbol_bits_;
 
-    void AssignBits(ValueType& result, SizeType& result_bits, const SizeType size);
+    void AssignBits(ValueType& result, SizeType& result_bits);
 };

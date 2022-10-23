@@ -12,11 +12,14 @@ public:
     Bitarray() : storage_(0), bits_count_(1) {
     }
 
-    explicit Bitarray(SizeType value) : storage_(value), bits_count_(0) {
+    Bitarray(SizeType value, SizeType bits_count) : storage_(value), bits_count_(bits_count) {
+    }
+
+    explicit Bitarray(SizeType value) : Bitarray(value, 1) {
         if (value == 0) {
-            bits_count_ = 1;
             return;
         }
+        bits_count_ = 0;
         while (value > 0) {
             value <<= 1;
             ++bits_count_;
@@ -25,6 +28,7 @@ public:
 
     Bitarray(const Bitarray& other) {
         storage_ = other.storage_;
+        bits_count_ = other.bits_count_;
     }
 
     Bitarray(Bitarray&& other) {
@@ -74,5 +78,6 @@ private:
 
     void Swap(Bitarray& other) {
         std::swap(storage_, other.storage_);
+        std::swap(bits_count_, other.bits_count_);
     }
 };
