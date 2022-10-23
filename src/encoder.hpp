@@ -24,12 +24,7 @@ private:
     };
 
     struct TrieNodeCompare {
-        bool operator()(const std::unique_ptr<TrieNode>& first, const std::unique_ptr<TrieNode>& second) const {
-            if (first->frequency_ == second->frequency_) {
-                return first->min_symbol_ < second->min_symbol_;
-            }
-            return first->frequency_ < second->frequency_;
-        }
+        bool operator()(const std::unique_ptr<TrieNode>& first, const std::unique_ptr<TrieNode>& second) const;
     };
 
 public:

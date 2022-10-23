@@ -18,6 +18,14 @@ Encoder::TrieNode::TrieNode(uint16_t symbol, size_t frequency)
     : left_(nullptr), right_(nullptr), min_symbol_(symbol), frequency_(frequency) {
 }
 
+bool Encoder::TrieNodeCompare::operator()(const std::unique_ptr<TrieNode>& first,
+                                          const std::unique_ptr<TrieNode>& second) const {
+    if (first->frequency_ == second->frequency_) {
+        return first->min_symbol_ < second->min_symbol_;
+    }
+    return first->frequency_ < second->frequency_;
+}
+
 std::vector<std::pair<uint16_t, size_t>> Encoder::GetCodesLengths(const std::unordered_map<uint16_t, size_t>& data) {
     BuildTrie(data);
     std::vector<std::pair<uint16_t, size_t>> result;

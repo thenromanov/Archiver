@@ -84,6 +84,9 @@ void Encode(std::string_view output_path, const std::vector<std::string_view>& i
         }
 
         input_file_stream.open(input_path.data(), std::ios_base::in | std::ios::binary);
+        if (!input_file_stream.is_open()) {
+            throw std::runtime_error("Can't open file");
+        }
         reader.ChangeStream(input_file_stream);
         while (!reader.IsFinished()) {
             uint16_t ch = reader.Get(8);
