@@ -9,6 +9,9 @@ function(add_unit_test TARGET)
         PUBLIC ./)
 endfunction()
 
+add_unit_test(test_bitarray unit_tests/test_bitarray.cpp)
+add_unit_test(test_bitread unit_tests/test_bitread.cpp bitread.cpp)
+add_unit_test(test_bitwrite unit_tests/test_bitwrite.cpp bitwrite.cpp)
 
 add_executable(
         archiver

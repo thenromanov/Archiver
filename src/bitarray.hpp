@@ -13,9 +13,15 @@ public:
     }
 
     Bitarray(SizeType bits_count) : storage_(0), bits_count_(bits_count) {
+        if (bits_count > N) {
+            throw std::invalid_argument("bits_count is greater than possible size");
+        }
     }
 
     Bitarray(SizeType bits_count, SizeType value) : storage_(value), bits_count_(bits_count) {
+        if (bits_count > N) {
+            throw std::invalid_argument("bits_count is greater than possible size");
+        }
     }
 
     Bitarray(const Bitarray& other) {
