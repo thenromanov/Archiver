@@ -33,7 +33,7 @@ TEST_CASE("Constructors") {
         } catch (const std::exception& e) {
             return;
         }
-        FAIL("IllegalConstucion");
+        FAIL("IllegalConstrucion");
     }
 }
 

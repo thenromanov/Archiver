@@ -12,6 +12,9 @@ endfunction()
 add_unit_test(test_bitarray unit_tests/test_bitarray.cpp)
 add_unit_test(test_bitread unit_tests/test_bitread.cpp bitread.cpp)
 add_unit_test(test_bitwrite unit_tests/test_bitwrite.cpp bitwrite.cpp)
+add_unit_test(test_encoder unit_tests/test_encoder.cpp encoder.cpp)
+add_unit_test(test_decoder unit_tests/test_decoder.cpp encoder.cpp decoder.cpp)
+add_unit_test(test_priority_queue unit_tests/test_priority_queue.cpp)
 
 add_executable(
         archiver

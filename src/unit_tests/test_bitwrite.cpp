@@ -5,7 +5,7 @@
 #include "bitwrite.hpp"
 
 TEST_CASE("File writing") {
-    std::fstream output_file_stream("../src/unit_tests/ouput_file.txt", std::ios_base::out | std::ios::binary);
+    std::fstream output_file_stream("../src/unit_tests/output_file.txt", std::ios_base::out | std::ios::binary);
     if (!output_file_stream.is_open()) {
         return;
     }
@@ -18,7 +18,7 @@ TEST_CASE("File writing") {
     writer.Flush();
     output_file_stream.close();
 
-    std::fstream input_file_stream("../src/unit_tests/ouput_file.txt", std::ios_base::in | std::ios::binary);
+    std::fstream input_file_stream("../src/unit_tests/output_file.txt", std::ios_base::in | std::ios::binary);
     if (!input_file_stream.is_open()) {
         return;
     }
@@ -37,7 +37,7 @@ TEST_CASE("File writing") {
 }
 
 TEST_CASE("Invalid reading") {
-    std::fstream output_file_stream("../src/unit_tests/ouput_file.txt", std::ios_base::out | std::ios::binary);
+    std::fstream output_file_stream("../src/unit_tests/output_file.txt", std::ios_base::out | std::ios::binary);
     if (!output_file_stream.is_open()) {
         return;
     }
