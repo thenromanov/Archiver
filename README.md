@@ -1,6 +1,6 @@
 # Archiver
 
-This project implements archiver based on Huffman coding. The program provides multiple file zipping and archive unzipping.
+This project implements archiver based on Huffman coding. The program provides zipping multiple files and archive unzipping.
 
 ## Command line interface
 
